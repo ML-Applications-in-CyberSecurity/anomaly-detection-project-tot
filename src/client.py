@@ -75,6 +75,23 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
                     #TODO 4
                     print(f"\n🚨 Anomaly Detected!\nData: {data}\nLLM Explanation: {llm_reply}\n")
+
+                    #csv file
+                    anomaly_record = pd.DataFrame([{
+                        "src_port": data["src_port"],
+                        "dst_port": data["dst_port"],
+                        "packet_size": data["packet_size"],
+                        "duration_ms": data["duration_ms"],
+                        "protocol": data["protocol"],
+                    }])
+                    # Path to csv file
+                    csv_file = "anomalies.csv"
+                    # If file exists, appand without header; otherwise, write with header
+                    if os.path.isfile(csv_file):
+                        anomaly_record.to_csv(csv_file, mode='a', header=False, index=False)
+                    else:
+                        anomaly_record.to_csv(csv_file, mode='w', header=True, index=False)
+
                 else:
                     print("normal")
 
